@@ -49,3 +49,42 @@ input:checked + .button .svg-line {
 input:checked + .button .svg-circle {
   stroke: red;
 }
+
+
+
+
+
+
+/* body{
+   
+    width: 300px;
+    margin-left: 400px;
+} */
+form{
+     
+    margin-left: 200px;
+    margin-top: 150px;
+    
+}
+h2{
+    color: blue;
+    margin-left:50px;
+}
+input{
+   margin: 20px;
+   width: 150px;
+   padding: 10px;
+   border: 1px soild black;
+   border-radius: 10px;
+}
+label{
+    color: blue;
+}
+ button{
+     color: blue;
+      border: 1px soild black;
+      border-radius: 10px;
+      width:70px;
+      margin-left:80px ;
+      cursor: pointer;
+    }
