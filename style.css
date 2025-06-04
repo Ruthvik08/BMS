@@ -1,0 +1,51 @@
+body {
+  margin: 0;
+  background: #e8e8e8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  width: 100px;
+  height: 100px;
+  background: #3cb043;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+input:checked + .button {
+  background: #666;
+}
+
+.svg-ring,
+.svg-line,
+.svg-circle {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  stroke: white;
+  pointer-events: none;
+  transition: transform 0.3s ease;
+}
+
+input:checked + .button .svg-ring {
+  transform: rotate(180deg);
+}
+
+input:checked + .button .svg-line {
+  stroke: red;
+}
+
+input:checked + .button .svg-circle {
+  stroke: red;
+}

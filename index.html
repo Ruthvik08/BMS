@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Power Toggle Button</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="center">
+    <input type="checkbox" id="power-toggle" hidden />
+    <label for="power-toggle" class="button">
+      <svg class="svg-ring" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="48" stroke-width="4" fill="none"/>
+      </svg>
+      <svg class="svg-line" viewBox="0 0 100 100">
+        <path d="M50 30 L50 55" stroke-width="6" stroke-linecap="round"/>
+      </svg>
+      <svg class="svg-circle" viewBox="0 0 100 100">
+        <path d="M50 55 A20 20 0 1 1 49.99 55" stroke-width="6" fill="none"/>
+      </svg>
+    </label>
+  </div>
+</body>
+</html>
