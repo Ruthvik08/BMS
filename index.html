@@ -7,23 +7,30 @@
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <div class="center">
+  
     <a href="Login.html"  class="login-link">Login</a>
 
-    <input type="checkbox" id="power-toggle" hidden />
-    <label for="power-toggle" class="button">
-      <svg class="svg-ring" viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="48" stroke-width="4" fill="none"/>
+ <label class="power-button">
+    <input type="checkbox" id="toggle" />
+    <div class="circle">
+      <!-- Power OFF icon (default) -->
+      <svg class="icon off-icon" viewBox="0 0 24 24">
+        <path d="M12 2v10" stroke="white" stroke-width="4" stroke-linecap="round"/>
+        <path d="M6.8 6.8a7 7 0 1 0 10.4 0" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/>
       </svg>
-      <svg class="svg-line" viewBox="0 0 100 100">
-        <path d="M50 30 L50 55" stroke-width="6" stroke-linecap="round"/>
+
+      <!-- Power ON icon (only shows when checked) -->
+      <svg class="icon on-icon" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="7" stroke="white" stroke-width="2" fill="none"/>
+        <line x1="12" y1="6" x2="12" y2="12" stroke="white" stroke-width="2" stroke-linecap="round"/>
       </svg>
-      <svg class="svg-circle" viewBox="0 0 100 100">
-        <path d="M50 55 A20 20 0 1 1 49.99 55" stroke-width="6" fill="none"/>
-      </svg>
-    </label>
-  </div>
-  <script src="script.js"></script>
+    </div>
+  </label>
+
+
+    
+    
+<script src="script.js"></script>
 
 </body>
 </html>
