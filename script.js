@@ -1,29 +1,52 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const toggle = document.getElementById("power-toggle");
-  if (!toggle) return;
 
-  toggle.addEventListener("change", function () {
-    const isChecked = this.checked;
+    // document.addEventListener("DOMContentLoaded", () => {
+    //   const toggle = document.getElementById("toggle");
+    //   const onIcon = document.querySelector(".on-icon");
+    //   const offIcon = document.querySelector(".off-icon");
 
-    fetch("/toggle", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ power: isChecked })
-    })
-    .then(response => response.text())
-    .then(data => {
-      console.log("Server response:", data);
+    //   // Default to OFF icon
+    //   onIcon.style.display = "none";
+    //   offIcon.style.display = "block";
 
-      alert(`Power is now turned ${isChecked ? "ON" : "OFF"}`);
+    //   toggle.addEventListener("change", () => {
+    //     const isChecked = toggle.checked;
 
-      
-      window.location.href = "Login.html";
-    })
-    .catch(error => {
-      console.error("Error:", error);
-      alert("An error occurred while toggling power.");
+    //     if (isChecked) {
+    //       onIcon.style.display = "block";
+    //       offIcon.style.display = "none";
+    //       alert("Power ON");
+    //     } else {
+    //       onIcon.style.display = "none";
+    //       offIcon.style.display = "block";
+    //       alert("Power OFF");
+    //     }
+
+    //     Redirect after alert
+    //     window.location.href = "Login.html";
+    //   });
+    // });
+  
+
+document.addEventListener("DOMContentLoaded", () => {
+      const toggle = document.getElementById("toggle");
+      const onIcon = document.querySelector(".on-icon");
+      const offIcon = document.querySelector(".off-icon");
+
+      // Default icon state
+      onIcon.style.display = "none";
+      offIcon.style.display = "block";
+
+      toggle.addEventListener("change", () => {
+        if (toggle.checked) {
+          onIcon.style.display = "block";
+          offIcon.style.display = "none";
+
+          alert("Power ON");
+          window.location.href = "Login.html";
+        } else {
+          onIcon.style.display = "none";
+          offIcon.style.display = "block";
+          // No alert or redirect on OFF
+           }
+      });
     });
-  });
-});
