@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LED Control with Login</title>
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .login-box, .control-panel {
+      background: white;
+      padding: 20px;
+      margin: 20px auto;
+      border-radius: 10px;
+      width: 300px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    input[type="text"], input[type="password"] {
+      padding: 10px;
+      width: 90%;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+
+    .power-button {
+      display: inline-block;
+      padding: 20px;
+      border-radius: 50px;
+      background-color: gray;
+      margin: 15px;
+      transition: background-color 0.3s ease;
+    }
+
+    .power-button.on {
+      background-color: green;
+    }
+
+    .power-button.off {
+      background-color: red;
+    }
+
+    .circle {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .icon {
+      width: 30px;
+      height: 30px;
+    }
+
+    input[type="checkbox"] {
+      display: none;
+    }
+
+    #led-status {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-box" id="login-box">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Enter Username" required />
+    <input type="password" id="password" placeholder="Enter Password" required />
+    <button onclick="login()">Login</button>
+  </div>
+
+  <div class="control-panel" id="control-panel" style="display:none;">
+    <h2>LED Control</h2>
+    <label class="power-button off" id="powerBtn">
+      <input type="checkbox" id="toggle" />
+      <div class="circle">
+        <svg class="icon off-icon" viewBox="0 0 24 24">
+          <path d="M12 2v10" stroke="white" stroke-width="4" stroke-linecap="round" />
+          <path d="M7 7a7 7 0 1 0 10 0" stroke="white" stroke-width="3" stroke-linecap="round" fill="none" />
+        </svg>
+        <svg class="icon on-icon" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="7" stroke="white" stroke-width="3" fill="none" />
+          <line x1="12" y1="6" x2="12" y2="12" stroke="white" stroke-width="4" stroke-linecap="round" />
+        </svg>
+      </div>
+    </label>
+    <p>LED Status: <span id="led-status">Unknown</span></p>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    const mqttOptions = {
+      clean: true,
+      connectTimeout: 4000,
+      clientId: 'web_' + Math.random().toString(16).substr(2, 8),
+      username: 'ruthvik',
+      password: 'Raghu369.'
+    };
+
+    const mqttUrl = 'wss://163e96f460c742f1ace6ae0c0f9ed1a7.s1.eu.hivemq.cloud:8884/mqtt';
+    const client = mqtt.connect(mqttUrl, mqttOptions);
+
+    let currentStatus = "OFF";
+    const toggle = document.getElementById('toggle');
+    const powerBtn = document.getElementById('powerBtn');
+    const ledStatus = document.getElementById('led-status');
+
+    function login() {
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+
+      // Dummy login check — replace with backend API call for real auth
+      if (user === "admin" && pass === "admin123") {
+        document.getElementById('login-box').style.display = "none";
+        document.getElementById('control-panel').style.display = "block";
+      } else {
+        alert("Invalid username or password");
+      }
+    }
+
+    function logout() {
+      document.getElementById('login-box').style.display = "block";
+      document.getElementById('control-panel').style.display = "none";
+    }
+
+    client.on('connect', () => {
+      console.log('✅ MQTT Connected');
+      client.subscribe('led/status', (err) => {
+        if (!err) console.log('📡 Subscribed to led/status');
+      });
+    });
+
+    client.on('message', (topic, message) => {
+      if (topic === 'led/status') {
+        const status = message.toString().toUpperCase();
+        currentStatus = status;
+        ledStatus.innerText = status;
+
+        if (status === 'ON') {
+          toggle.checked = true;
+          powerBtn.classList.add('on');
+          powerBtn.classList.remove('off');
+        } else {
+          toggle.checked = false;
+          powerBtn.classList.add('off');
+          powerBtn.classList.remove('on');
+        }
+      }
+    });
+
+    toggle.addEventListener('change', () => {
+      if (currentStatus === 'ON') {
+        if (!toggle.checked) {
+          client.publish('led/control', 'OFF');
+          console.log('🔴 Sent: OFF');
+        } else {
+          toggle.checked = true; // stay ON
+        }
+      } else {
+        toggle.checked = false;
+        alert("LED is OFF. Cannot turn it ON.");
+      }
+    });
+  </script>
+
+</body>
+</html>

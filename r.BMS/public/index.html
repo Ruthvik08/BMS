@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ESP32 LED Control</title>
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+      background-color: #f0f0f0;
+    }
+
+    .power-button {
+      display: inline-block;
+      padding: 10px;
+      border-radius: 60px;
+      background-color: gray;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    .power-button.on {
+      background-color: green;
+    }
+
+    .power-button.off {
+      background-color: red;
+    }
+
+    .circle {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .icon {
+      width: 70px;
+      height: 50px;
+    }
+
+    input[type="checkbox"] {
+      display: none;
+    }
+
+    #led-status {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .login-link {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      text-decoration: none;
+      font-size: 16px;
+      color: blue;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="login.html" class="login-link">Login</a>
+
+  <label class="power-button off" id="powerBtn">
+    <input type="checkbox" id="toggle" disabled />
+    <div class="circle">
+      <svg class="icon off-icon" viewBox="0 0 24 24">
+        <path d="M12 2v10" stroke="white" stroke-width="4" stroke-linecap="round" />
+        <path d="M7 7a7 7 0 1 0 10 0" stroke="white" stroke-width="3" stroke-linecap="round" fill="none" />
+      </svg>
+      <svg class="icon on-icon" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="7" stroke="white" stroke-width="3" fill="none" />
+        <line x1="12" y1="6" x2="12" y2="12" stroke="white" stroke-width="4" stroke-linecap="round" />
+      </svg>
+    </div>
+  </label>
+
+  <p>LED Status: <span id="led-status">Unknown</span></p>
+
+  <script>
+    const connectUrl = 'wss://163e96f460c742f1ace6ae0c0f9ed1a7.s1.eu.hivemq.cloud:8884/mqtt';
+
+    const options = {
+      clean: true,
+      connectTimeout: 4000,
+      clientId: 'web_' + Math.random().toString(16).substr(2, 8),
+      username: 'ruthvik',
+      password: 'Raghu369.'
+    };
+
+    const client = mqtt.connect(connectUrl, options);
+
+    client.on('connect', () => {
+      console.log('✅ Connected to MQTT broker');
+      client.subscribe('led/status', (err) => {
+        if (!err) {
+          console.log('📡 Subscribed to led/status');
+        }
+      });
+    });
+
+    client.on('message', (topic, message) => {
+      if (topic === 'led/status') {
+        const status = message.toString();
+        const statusText = document.getElementById('led-status');
+        const toggle = document.getElementById('toggle');
+        const button = document.getElementById('powerBtn');
+
+        statusText.innerText = status;
+
+        if (status === 'ON') {
+          toggle.checked = true;
+          button.classList.remove('off');
+          button.classList.add('on');
+        } else {
+          toggle.checked = false;
+          button.classList.remove('on');
+          button.classList.add('off');
+        }
+
+        console.log('💡 LED Status:', status);
+      }
+    });
+  </script>
+
+</body>
+</html>
